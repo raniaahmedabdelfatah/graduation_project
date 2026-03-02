@@ -1,0 +1,57 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:graduation2/core/services/api_services.dart';
+import 'package:graduation2/feauture/auth/manager/auth_cubit.dart';
+import 'package:graduation2/feauture/auth/views/check_email.dart';
+import 'package:graduation2/feauture/auth/views/login_screen.dart';
+import 'package:graduation2/feauture/profile/manager/profile_cubit.dart';
+import 'package:graduation2/feauture/profile/views/myprofile/profile.dart';
+import 'package:graduation2/feauture/profile/views/myprofile/seller_profile.dart';
+import 'package:graduation2/feauture/product/view/product_datails.dart';
+import 'package:graduation2/feauture/review/view/cart/cart_screen.dart';
+import 'package:graduation2/feauture/review/view/write_review.dart';
+import 'package:graduation2/feauture/splash_screen/presentation/view/splash.dart';
+import 'package:graduation2/generated/l10n.dart';
+
+void main() {
+  runApp(const CratoriaApp());
+}
+
+class CratoriaApp extends StatelessWidget {
+  const CratoriaApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => AuthCubit(ApiService())),
+        BlocProvider(
+          create: (context) =>
+              UserProfileCubit(UserProfileRepo())..fetchProfile(),
+        ),
+      ],
+      child: MaterialApp(
+        locale: const Locale('ar'),
+        localizationsDelegates: [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          scaffoldBackgroundColor: const Color(0xFFEFEBE9),
+          textTheme: GoogleFonts.arimoTextTheme(),
+          colorScheme: const ColorScheme.light(
+            primary: Color(0xFF3E2723),
+            secondary: Color(0xFF8D6E63),
+          ),
+        ),
+        home: SplashView(),
+      ),
+    );
+  }
+}
